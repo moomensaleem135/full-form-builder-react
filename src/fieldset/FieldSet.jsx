@@ -68,7 +68,7 @@ export default function FieldSetBase(props) {
   }
 
   return (
-    <div style={{   ...this.props.style,
+    <div style={{   ...this.props.style
      }} className={baseClasses}>
       <ComponentHeader {...props} isFieldSet={true} />
       <div>

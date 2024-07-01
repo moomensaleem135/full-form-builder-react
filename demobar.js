@@ -64,8 +64,13 @@ export default class Demobar extends React.Component {
     this.setState({
       data,
     });
-  }
+    console.log(data)
 
+
+  }
+ onEditorChange(data){
+  console.log(data)
+ }
   // eslint-disable-next-line no-unused-vars
   _onSubmit(data) {
     // console.log('onSubmit', data);
@@ -77,6 +82,7 @@ export default class Demobar extends React.Component {
   }
 
   render() {
+   
       let modalClass = 'modal';
       if (this.state.previewVisible) {
         modalClass += ' show d-block';
@@ -99,6 +105,7 @@ export default class Demobar extends React.Component {
         <button className="btn btn-default float-right" style={{ marginRight: '10px' }} onClick={() => this.showShortPreview()}>Alternate/Short Form</button>
         <button className="btn btn-default float-right" style={{ marginRight: '10px' }} onClick={() => this.showRoPreview()}>Read Only Form</button>
         <button className="btn btn-default float-right" style={{ marginRight: '10px' }} onClick={() => this.saveFormData()}>Save Form</button>
+        
 
         { this.state.previewVisible &&
           <div className={modalClass} role="dialog">
@@ -114,8 +121,10 @@ export default class Demobar extends React.Component {
                   form_method="POST"
                   // skip_validations={true}
                   // onSubmit={this._onSubmit}
+                  onChange={this._onChange}
                   variables={this.props.variables}
                   data={this.state.data}
+                  
                   locale='en'/>
 
                 <div className="modal-footer">
@@ -128,7 +137,7 @@ export default class Demobar extends React.Component {
 
         { this.state.roPreviewVisible &&
           <div className={roModalClass}>
-            <div className="modal-dialog modal-lg">
+            <div >
               <div className="modal-content">
                 <ReactFormGenerator
                   download_path=""
@@ -139,6 +148,7 @@ export default class Demobar extends React.Component {
                   form_action="/"
                   form_method="POST"
                   // read_only={true}
+                  onChange={this.onEditorChange}
                   variables={this.props.variables}
                   hide_actions={true}
                   data={this.state.data}
@@ -166,6 +176,7 @@ export default class Demobar extends React.Component {
                   display_short={true}
                   variables={this.props.variables}
                   hide_actions={false}
+                  
                   locale='en'
                   />
 

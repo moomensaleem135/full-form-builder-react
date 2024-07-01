@@ -13,6 +13,7 @@ class MultiColumnRowBase extends React.Component {
     const {
       controls, data, editModeOn, getDataById, setAsChild, removeChild, seq, className, index,
     } = this.props;
+    console.log("multicolumn",this)
     const { childItems, pageBreakBefore } = data;
     let baseClasses = 'SortableItem rfb-item';
     if (pageBreakBefore) { baseClasses += ' alwaysbreak'; }
@@ -22,9 +23,11 @@ class MultiColumnRowBase extends React.Component {
         <ComponentHeader {...this.props} />
         <div>
           <ComponentLabel {...this.props} />
-          <div className="row">
+          <div className="row" 
+          style={{columnGap:this.props.data.columnGap + 'px'}}
+            >
             {childItems.map((x, i) => (
-              <div key={`${i}_${x || '_'}`} className={className}>{
+              <div key={`${i}_${x || '_'}`} className={className} >{
                 controls ? controls[i] :
                   <Dustbin
                     style={{ width: '100%' }}
@@ -33,6 +36,7 @@ class MultiColumnRowBase extends React.Component {
                     items={childItems}
                     col={i}
                     parentIndex={index}
+                   
                     editModeOn={editModeOn}
                     _onDestroy={() => removeChild(data, i)}
                     getDataById={getDataById}

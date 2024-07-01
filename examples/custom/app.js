@@ -112,6 +112,8 @@ class App extends React.Component {
     post(saveUrl, data);
   };
 
+
+
   render() {
     return (
       <div className="App">
@@ -125,10 +127,13 @@ class App extends React.Component {
           <option value="2">Form 2</option>
         </select>
         <hr></hr>
+   
         <ReactFormBuilder
           onLoad={this.onLoad}
           onPost={this.onPost}
+        
           toolbarItems={items}
+   
         />,
       </div>
     );

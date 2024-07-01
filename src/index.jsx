@@ -12,6 +12,7 @@ import FormGenerator from './form';
 import store from './stores/store';
 import Registry from './stores/registry';
 import AppLocale from './language-provider';
+import { uuid } from './UUID';
 
 class ReactFormBuilder extends React.Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class ReactFormBuilder extends React.Component {
     const currentAppLocale = AppLocale[language];
     if (this.props.toolbarItems) { toolbarProps.items = this.props.toolbarItems; }
     return (
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={HTML5Backend} >
         <IntlProvider
           locale={currentAppLocale.locale}
           messages={currentAppLocale.messages}>
@@ -65,8 +66,8 @@ class ReactFormBuilder extends React.Component {
            </p>
            <Container />
          </div> */}
-            <div className="react-form-builder clearfix">
-              <div>
+            <div className="react-form-builder clearfix" >
+              <div  >
                 <Preview
                   files={this.props.files}
                   manualEditModeOff={this.manualEditModeOff.bind(this)}
@@ -77,6 +78,7 @@ class ReactFormBuilder extends React.Component {
                   saveUrl={this.props.saveUrl}
                   onLoad={this.props.onLoad}
                   onPost={this.props.onPost}
+                  // clear={this.props.clear}
                   editModeOn={this.editModeOn}
                   editMode={this.state.editMode}
                   variables={this.props.variables}

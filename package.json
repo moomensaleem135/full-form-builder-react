@@ -1,13 +1,13 @@
 {
   "name": "full-form-builder-react",
-  "version": "0.1.1",
+  "version": "0.1.9",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moomensaleem135/extensive-form-builder-react.git"
+    "url": "git+https://github.com/moomensaleem135/full-form-builder-react.git"
   },
   "files": [
     "lib",

@@ -4,6 +4,7 @@ import { get, post } from './requests';
 let _saveUrl;
 let _onPost;
 let _onLoad;
+// let _onClear;
 
 const store = new Store({
   actions: {
@@ -67,7 +68,7 @@ const store = new Store({
       const { data } = context.state;
       this.setData(context, data, true);
     },
-
+   
     updateOrder(context, elements) {
       const { saveAlways } = context.state;
       const newData = elements.filter(x => x && !x.parentId);
@@ -79,7 +80,7 @@ const store = new Store({
       // console.log('insertItem', item);
       context.commit('setLastItem', item.isContainer ? null : item);
     },
-
+    
     save(data) {
       if (_onPost) {
         _onPost({ task_data: data });
@@ -118,6 +119,7 @@ const store = new Store({
 store.setExternalHandler = (onLoad, onPost) => {
   _onLoad = onLoad;
   _onPost = onPost;
+  // _onClear=onClear
 };
 
 export default store;

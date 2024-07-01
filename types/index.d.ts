@@ -126,6 +126,7 @@ export interface FormBuilderProps {
   show_description?: boolean;
   onLoad?: () => Promise<FormBuilderPostData>;
   onPost?: (data: FormBuilderPostData) => void;
+  onClear?:boolean;
   saveUrl?: string;
   saveAlways?: boolean;
   editMode?: boolean;

@@ -483,6 +483,8 @@ class Toolbar extends React.Component {
 
     if (elementKey === "Image") {
       elementOptions.src = item.src;
+      elementOptions.height=240;
+      elementOptions.width=320
     }
     if (elementKey === "Button") {
       elementOptions.color = 'secondary';
@@ -498,6 +500,8 @@ class Toolbar extends React.Component {
     if (elementKey === "Download") {
       elementOptions._href = item._href;
       elementOptions.file_path = item.file_path;
+      elementOptions.height=240;
+      elementOptions.width=320
     }
 
     if (elementKey === "Range") {
@@ -511,6 +515,7 @@ class Toolbar extends React.Component {
 
     if (item.element === "MultiColumnRow") {
       elementOptions.col_count = item.col_count;
+      elementOptions.columnGap=10
     }
     if (elementKey === "Collapse") {
       elementOptions.isVisible = false;
@@ -524,6 +529,7 @@ class Toolbar extends React.Component {
     }
 
     if (item.field_name) {
+      elementOptions.initialFieldName=item.field_name
       elementOptions.field_name = item.field_name + ID.uuid();
     }
 
@@ -551,6 +557,7 @@ class Toolbar extends React.Component {
   _onClick(item) {
     // ElementActions.createElement(this.create(item));
     store.dispatch("create", this.create(item));
+    
   }
 
   renderItem = (item) => (

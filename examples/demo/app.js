@@ -15,7 +15,7 @@ app.render(
       url='/api/formdata'
       saveUrl='/api/formdata'
     />
-  </React.StrictMode>,
+   </React.StrictMode>,
 );
 
 const demo = ReactDOM.createRoot(

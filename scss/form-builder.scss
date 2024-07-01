@@ -4,13 +4,15 @@
     label {
       span {
         background: white;
-        font-weight: bold;
-        padding: 0 10px;
+        // font-weight: bold;
+        // padding: 0 10px;
       }
     }
     .row {
       padding: 0 25px;
-      border: 1px solid #6da6e3;
+      // border: 1px solid #6da6e3;
+      display: flex;
+
       border-radius: 10px;
       margin-top: -18px;
     }
@@ -273,18 +275,21 @@
 
 .image-upload-container {
   position: relative;
+  // margin-left: -40px;
   .image-upload {
     position: relative;
     opacity: 0;
-    z-index: 2;
+    left: -80px;
+    z-index: 120;
     height: 50px;
+    cursor: pointer !important;
   }
 
   .image-upload-control {
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 1;
+    z-index: 9;
   }
 }
 
@@ -296,7 +301,7 @@
 .file-upload-preview {
   border: 4px solid #fff;
   box-shadow: 0 0 2px 2px rgba(0,0,0,0.1);
-  padding: 5px;
+  padding: 0px 5px;
 }
 
 .btn-image-clear {
@@ -306,7 +311,7 @@
 
 .btn-file-upload-clear {
   margin: auto;
-  padding: 10px;
+  padding: 0px 10px;
 }
 
 @media ( max-width: $screen-sm-min ) {
@@ -482,7 +487,7 @@
 
 }
 .collapse-text{
-  margin-top: 13px !important;
+  margin-top: 6px !important;
 }
 .collapse-children-text{
   margin-left: 10px;
@@ -493,8 +498,30 @@
 
 }
 .SortableItem.rfb-item{
-word-break: break-all;
+word-break: keep-all;
 }
 .react-form-builder-form .rfb-item{
   padding:0px !important
+}
+.btn-center{
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.fileupload-div{
+  cursor: pointer;
+}
+.col-md-6 ,.col-md-3,.col-md-4{
+  max-width: fit-content !important;
+  // margin-right: 3rem;
+}
+.file-upload-button{
+  // background-color: indigo;
+  // color: white;
+  border: 1px solid grey;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  // margin-top: 1rem;
 }

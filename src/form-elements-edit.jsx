@@ -68,6 +68,7 @@ export default class FormElementsEdit extends React.Component {
       data: this.props.data,
       dirty: false,
       srcPreview: this.props.element.src || "",
+      videoPreviewUrl: "",
     };
     this.fileInputRef = React.createRef(); // Step 1: Create a ref for the file input
   }
@@ -79,6 +80,7 @@ export default class FormElementsEdit extends React.Component {
   editElementProp(elemProperty, targProperty, e) {
     // elemProperty could be content or label
     // targProperty could be value or checked
+
     const this_element = this.state.element;
     this_element[elemProperty] = e.target[targProperty];
 
@@ -166,12 +168,58 @@ export default class FormElementsEdit extends React.Component {
           },
           this.updateElement
         );
+        console.log(this)
         this.fileInputRef.current.value = "";
       };
       reader.readAsDataURL(file);
     }
+   
   };
-  handleSliderChange = (event) => {
+  handleDownloadFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const this_element = this.state.element;
+      this_element.downloadFile = file;
+      this_element.downloadLink = {
+        fileName: file.name,
+        type: file.type,
+        videoPreviewUrl: file.type.startsWith("video/")
+          ? URL.createObjectURL(file)
+          : "",
+      };
+
+      this.setState(
+        {
+          element: this_element,
+          dirty: true,
+          downloadFile:file,
+          downloadLink: file.name,
+          videoPreviewUrl: file.type.startsWith("video/")
+            ? URL.createObjectURL(file)
+            : "",
+        },
+        this.updateElement
+      );
+    }
+  };
+  handleLinkChange = (event) => {
+    const link = event.target.value;
+    const this_element = this.state.element;
+    this_element.downloadLink = link;
+    this_element.downloadFile = null; // Clear file if a link is provided
+
+    this.setState(
+      {
+        element: this_element,
+        dirty: true,
+        downloadLink: link,
+        downloadFile: null,
+        videoPreviewUrl: "",
+      },
+      this.updateElement
+    );
+  };
+  handleSliderChange = (event,property) => {
     console.log("slider", this, "value", event.target.value);
     const newMarginTop = Number(event.target.value);
     const this_element = this.state.element;
@@ -182,7 +230,21 @@ export default class FormElementsEdit extends React.Component {
       dirty: true,
     });
   };
+  handleDimensionChange = (event) => {
+    console.log("slider", this, "value", event.target.value);
+    const newMarginTop = Number(event.target.value);
+    const this_element = this.state.element;
+    console.log("cjhange", newMarginTop);
+    if (this_element["width"] < 1000) {
+      this_element["width"] = newMarginTop;
+      this_element["height"] = newMarginTop;
+    }
 
+    this.setState({
+      element: this_element,
+      dirty: true,
+    });
+  };
   render() {
     if (this.state.dirty) {
       this.props.element.dirty = true;
@@ -232,11 +294,11 @@ export default class FormElementsEdit extends React.Component {
     )
       ? this.props.element.pageBreakBefore
       : false;
-    const this_checked_alternate_form = this.props.element.hasOwnProperty(
-      "alternateForm"
-    )
-      ? this.props.element.alternateForm
-      : false;
+    // const this_checked_alternate_form = this.props.element.hasOwnProperty(
+    //   "alternateForm"
+    // )
+    //   ? this.props.element.alternateForm
+    //   : false;
 
     const {
       canHavePageBreakBefore,
@@ -260,7 +322,6 @@ export default class FormElementsEdit extends React.Component {
     let editorState;
     let childEditorState;
     if (this.props.element.hasOwnProperty("content")) {
-
       editorState = this.convertFromHTML(this.props.element.content);
     }
     // if (this.props.element==="children") {
@@ -268,7 +329,6 @@ export default class FormElementsEdit extends React.Component {
     // }
     if (this.props.element.hasOwnProperty("children")) {
       childEditorState = this.convertFromHTML(this.props.element.children);
-     
     }
     if (this.props.element.hasOwnProperty("label")) {
       editorState = this.convertFromHTML(this.props.element.label);
@@ -317,9 +377,9 @@ export default class FormElementsEdit extends React.Component {
             </div>
           </div>
         )}
-  
-        {this.props.element.hasOwnProperty("file_path") && (
-          <div className="form-group">
+
+        {/* {this.props.element.hasOwnProperty("file_path") && (
+          <div className="form-group" >
             <label className="control-label" htmlFor="fileSelect">
               <IntlMessages id="choose-file" />:
             </label>
@@ -335,10 +395,96 @@ export default class FormElementsEdit extends React.Component {
                 return (
                   <option value={file.id} key={this_key}>
                     {file.file_name}
+              
                   </option>
                 );
               })}
             </select>
+          </div>
+        )} */}
+        {this.props.element.element === "Download" && (
+          <div className="form-group">
+            <label className="control-label">
+              <IntlMessages id="attach-file" />:
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              onChange={this.handleDownloadFileUpload}
+              ref={this.fileInputRef}
+            />
+            <label className="control-label">
+              <IntlMessages id="or-enter-link" />:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              value={this.state.downloadLink}
+              onChange={this.handleLinkChange}
+              placeholder="Enter file link"
+            />
+            {this.state.downloadFile && (
+              <div className="file-preview">
+                <IntlMessages id="selected-file" />:{" "}
+                {this.state.downloadFile.name}
+              </div>
+            )}
+            {/* {this.state.downloadFile.videoPreviewUrl && ( */}
+            {/* { this.state.data.downloadFile && ( */}
+              <>
+                <div className="button-type-select">
+                  <label>
+                    Video Dimensions {this.state.element.height} x{" "}
+                    {this.state.element.width}
+                  </label>
+                  <input
+                    type="range"
+                    onChange={this.handleDimensionChange}
+                    value={this.state.element.width}
+                    max="800"
+                  />
+                </div>
+
+                <div className="row">
+                  <div className="col-sm-3">
+                    <label className="control-label" htmlFor="elementWidth">
+                      <IntlMessages id="width" />:
+                    </label>
+                    <input
+                      id="elementWidth"
+                      type="text"
+                      className="form-control"
+                      defaultValue={this.props.element.width}
+                      onBlur={this.updateElement.bind(this)}
+                      onChange={this.editElementProp.bind(
+                        this,
+                        "width",
+                        "value"
+                      )}
+                    />
+                  </div>
+                  <div className="col-sm-3">
+                    <label className="control-label" htmlFor="elementHeight">
+                      <IntlMessages id="height" />:
+                    </label>
+                    <input
+                      id="elementHeight"
+                      type="text"
+                      className="form-control"
+                      defaultValue={this.props.element.height}
+                      onBlur={this.updateElement.bind(this)}
+                      onChange={this.editElementProp.bind(
+                        this,
+                        "height",
+                        "value"
+                      )}
+                    />
+                  </div>
+                </div>
+                <p>Maximum size 800x800</p>
+              </>
+             {/* )}  */}
+            {/* )} */}
           </div>
         )}
         {this.props.element.hasOwnProperty("href") && (
@@ -414,6 +560,7 @@ export default class FormElementsEdit extends React.Component {
                     "readOnly",
                     "checked"
                   )}
+                  
                 />
                 <label className="custom-control-label" htmlFor="is-read-only">
                   <IntlMessages id="read-only" />
@@ -586,28 +733,29 @@ export default class FormElementsEdit extends React.Component {
               onChange={this.editElementProp.bind(this, "src", "value")}
             />
             <br />
-          
+
             <input
               type="file"
               accept="image/*"
               onChange={this.handleFileUpload}
               ref={this.fileInputRef} // Step 1: Assign the ref to the file input
             />
+
             {this.state.srcPreview && (
               <img
                 src={this.state.srcPreview}
                 alt="Preview"
-                style={{ width: "100%", marginTop: "10px" }}
+                style={{ width: "100px", height: "100px", marginTop: "10px" }}
               />
             )}
-              <div className="button-type-select">
-           <label>Spacing from top {this.state.element.marginTop}</label>
-           <input
-             type="range"
-             onChange={this.handleSliderChange}
-             value={this.state.element.marginTop}
-           />
-         </div>
+            <div className="button-type-select">
+              <label>Spacing from top {this.state.element.marginTop}</label>
+              <input
+                type="range"
+                onChange={this.handleSliderChange}
+                value={this.state.element.marginTop}
+              />
+            </div>
           </div>
         )}
         {canHaveImageSize && (
@@ -631,35 +779,60 @@ export default class FormElementsEdit extends React.Component {
                 </label>
               </div>
             </div>
+            {this.state.srcPreview && (
+              <>
+                <div className="button-type-select">
+                  <label>
+                    Image Dimensions {this.state.element.height} x{" "}
+                    {this.state.element.width}
+                  </label>
+                  <input
+                    type="range"
+                    onChange={this.handleDimensionChange}
+                    value={this.state.element.width}
+                    max="800"
+                  />
+                </div>
 
-            <div className="row">
-              <div className="col-sm-3">
-                <label className="control-label" htmlFor="elementWidth">
-                  <IntlMessages id="width" />:
-                </label>
-                <input
-                  id="elementWidth"
-                  type="text"
-                  className="form-control"
-                  defaultValue={this.props.element.width}
-                  onBlur={this.updateElement.bind(this)}
-                  onChange={this.editElementProp.bind(this, "width", "value")}
-                />
-              </div>
-              <div className="col-sm-3">
-                <label className="control-label" htmlFor="elementHeight">
-                  <IntlMessages id="height" />:
-                </label>
-                <input
-                  id="elementHeight"
-                  type="text"
-                  className="form-control"
-                  defaultValue={this.props.element.height}
-                  onBlur={this.updateElement.bind(this)}
-                  onChange={this.editElementProp.bind(this, "height", "value")}
-                />
-              </div>
-            </div>
+                <div className="row">
+                  <div className="col-sm-3">
+                    <label className="control-label" htmlFor="elementWidth">
+                      <IntlMessages id="width" />:
+                    </label>
+                    <input
+                      id="elementWidth"
+                      type="text"
+                      className="form-control"
+                      defaultValue={this.props.element.width}
+                      onBlur={this.updateElement.bind(this)}
+                      onChange={this.editElementProp.bind(
+                        this,
+                        "width",
+                        "value"
+                      )}
+                    />
+                  </div>
+                  <div className="col-sm-3">
+                    <label className="control-label" htmlFor="elementHeight">
+                      <IntlMessages id="height" />:
+                    </label>
+                    <input
+                      id="elementHeight"
+                      type="text"
+                      className="form-control"
+                      defaultValue={this.props.element.height}
+                      onBlur={this.updateElement.bind(this)}
+                      onChange={this.editElementProp.bind(
+                        this,
+                        "height",
+                        "value"
+                      )}
+                    />
+                  </div>
+                </div>
+                <p>Maximum size 800x800</p>
+              </>
+           )}
           </div>
         )}
         {this.state.element.element === "FileUpload" && (
@@ -715,10 +888,10 @@ export default class FormElementsEdit extends React.Component {
           "MultiColumnRow",
         ].includes(this.state.element.element) && (
           <div>
-            <div className="form-group">
-              <label className="control-label" htmlFor="fileType">
+            <div className="form-group">  
+            {/* <label className="control-label" htmlFor="fileType">
                 <IntlMessages id="choose-file-type" />:
-              </label>
+              </label> */}
               <div className="button-type-select">
                 <label>Spacing from top {this.state.element.marginTop}</label>
                 <input
@@ -727,6 +900,15 @@ export default class FormElementsEdit extends React.Component {
                   value={this.state.element.marginTop}
                 />
               </div>
+              <div className="button-type-select">
+                <label>Column Spacing {this.state.element.columnGap}</label>
+                <input
+                  type="range"
+                  onChange={this.editElementProp.bind(this, "columnGap", "value")}
+                  value={this.state.element.columnGap}
+                />
+              </div>
+           
             </div>
           </div>
         )}
@@ -780,7 +962,7 @@ export default class FormElementsEdit extends React.Component {
           </div>
         )}
 
-        {canHaveAlternateForm && (
+        {/* {canHaveAlternateForm && (
           <div className="form-group">
             <label className="control-label">
               <IntlMessages id="alternate-signature-page" />
@@ -790,7 +972,7 @@ export default class FormElementsEdit extends React.Component {
                 id="display-on-alternate"
                 className="custom-control-input"
                 type="checkbox"
-                checked={this_checked_alternate_form}
+                // checked={this_checked_alternate_form}
                 value={true}
                 onChange={this.editElementProp.bind(
                   this,
@@ -806,7 +988,7 @@ export default class FormElementsEdit extends React.Component {
               </label>
             </div>
           </div>
-        )}
+        )} */}
         {this.props.element.hasOwnProperty("step") && (
           <div className="form-group">
             <div className="form-group-range">

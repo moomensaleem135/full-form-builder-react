@@ -1,14 +1,14 @@
 /**
-  * <Preview />
-  */
+ * <Preview />
+ */
 
-import React from 'react';
-import update from 'immutability-helper';
-import store from './stores/store';
-import FormElementsEdit from './form-dynamic-edit';
-import SortableFormElements from './sortable-form-elements';
-import CustomDragLayer from './form-elements/component-drag-layer';
-
+import React from "react";
+import update from "immutability-helper";
+import store from "./stores/store";
+import FormElementsEdit from "./form-dynamic-edit";
+import SortableFormElements from "./sortable-form-elements";
+import CustomDragLayer from "./form-elements/component-drag-layer";
+import ID from "./UUID";
 const { PlaceHolder } = SortableFormElements;
 
 export default class Preview extends React.Component {
@@ -37,24 +37,31 @@ export default class Preview extends React.Component {
     this.setAsChild = this.setAsChild.bind(this);
     this.removeChild = this.removeChild.bind(this);
     this._onDestroy = this._onDestroy.bind(this);
+    this._onCopy = this._onCopy.bind(this);
+    // this._onClear = this._onClear.bind(this);
   }
 
   componentDidMount() {
     const { data, url, saveUrl, saveAlways } = this.props;
-    store.subscribe(state => this._onUpdate(state.data));
-    store.dispatch('load', { loadUrl: url, saveUrl, data: data || [], saveAlways });
-    document.addEventListener('mousedown', this.editModeOff);
+    store.subscribe((state) => this._onUpdate(state.data));
+    store.dispatch("load", {
+      loadUrl: url,
+      saveUrl,
+      data: data || [],
+      saveAlways,
+    });
+    document.addEventListener("mousedown", this.editModeOff);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.editModeOff);
+    document.removeEventListener("mousedown", this.editModeOff);
   }
 
   editModeOff = (e) => {
     if (this.editForm.current && !this.editForm.current.contains(e.target)) {
       this.manualEditModeOff();
     }
-  }
+  };
 
   manualEditModeOff = () => {
     const { editElement } = this.props;
@@ -63,10 +70,10 @@ export default class Preview extends React.Component {
       this.updateElement(editElement);
     }
     this.props.manualEditModeOff();
-  }
+  };
 
   _setValue(text) {
-    return text.replace(/[^A-Z0-9]+/ig, '_').toLowerCase();
+    return text.replace(/[^A-Z0-9]+/gi, "_").toLowerCase();
   }
 
   updateElement(element) {
@@ -83,18 +90,19 @@ export default class Preview extends React.Component {
 
     if (found) {
       this.seq = this.seq > 100000 ? 0 : this.seq + 1;
-      store.dispatch('updateOrder', data);
+      store.dispatch("updateOrder", data);
     }
   }
 
   _onChange(data) {
     const answer_data = {};
-
+    console.log("hello", data);
     data.forEach((item) => {
       if (item && item.readOnly && this.props.variables[item.variableKey]) {
         answer_data[item.field_name] = this.props.variables[item.variableKey];
       }
     });
+    console.log("hello", "answer_data", answer_data);
 
     this.setState({
       data,
@@ -104,26 +112,186 @@ export default class Preview extends React.Component {
 
   _onDestroy(item) {
     if (item.childItems) {
-      item.childItems.forEach(x => {
+      item.childItems.forEach((x) => {
         const child = this.getDataById(x);
         if (child) {
-          store.dispatch('delete', child);
+          store.dispatch("delete", child);
         }
       });
     }
-    store.dispatch('delete', item);
+    store.dispatch("delete", item);
   }
+  // _onClear(){
 
+  // store.dispatch("updateOrder", []);
+
+  // }
+
+  //   _onCopy(item) {
+  //     const { data } = this.state;
+
+  //     // Create a deep copy of the item with a new ID
+  //     const newItem = {
+  //       ...item,
+  //       id:ID.uuid(), // Or any method to generate a unique ID
+  //       // Optionally, handle nested structures or other fields that require a deep copy
+  //       field_name:item.initialFieldName + ID.uuid()
+  //     };
+  //     // if(item.childItems){
+
+  //     //   console.log("check",item.childItems[0],data)
+  //     //   const da=this.getDataById(item.childItems[0])
+  //     //   console.log
+  //     // }
+
+  //     // Insert the copied item after the original item
+  //     const index = data.indexOf(item);
+  //     const newData = update(this.state, {
+  //       data: {
+  //         $splice: [[index + 1, 0, newItem]],
+  //       },
+  //     });
+  // console.log("new data",newData)
+  //     this.setState(newData);
+  //     store.dispatch("updateOrder", newData.data);
+  //   }
+
+  // _onCopy(item) {
+  //   const { data } = this.state;
+  //   const newElement = {
+  //     ...item,
+  //     id: ID.uuid(),
+  //     childItems: [],
+  //     field_name: `${item.initialFieldName || item.field_name || 'field'}_${ID.uuid()}`,
+  //   };
+
+  //   const generateNewElement = (element) => {
+  //     if (element) {
+  //       newElement.childItems = element.childItems.map(childId => {
+  //         if (childId) {
+  //           const child = this.getDataById(childId);
+  //           const newSubComp = {
+  //             ...child,
+  //             id: ID.uuid(),
+  //             parentId: newElement.id,
+  //             parentIndex: child.parentIndex + 1,
+  //           };
+
+  //           newData = update(newData, {
+  //             data: { $push: [newSubComp] },
+  //           });
+
+  //           this.setAsChild(newElement, newSubComp, newElement.childItems.length, false);
+
+  //           return newSubComp.id;
+  //         }
+  //       });
+  //     }
+
+  //     return newElement;
+  //   };
+
+  //   let newData = { ...this.state };
+  //   const newItem = item.childItems ?  generateNewElement(item):newElement;
+  //   const index = data.indexOf(item);
+  //   newData = update(this.state, {
+  //     data: {
+  //       $splice: [[index + 1, 0, newItem]],
+  //     },
+  //   });
+
+  //   this.setState(newData);
+  //   store.dispatch("updateOrder", newData.data);
+  // }
+  _onCopy(item) {
+    const { data } = this.state;
+    var newElement = {
+      ...item,
+      id: ID.uuid(),
+      childItems: [],
+      field_name: `${
+        item.initialFieldName || item.field_name || "field"
+      }_${ID.uuid()}`,
+    };
+    if (item.options) {
+      const newOptions = item.options.map((ele) => {
+        return { ...ele, key: `${item.initialFieldName}options_${ID.uuid()}` };
+      });
+      console.log("new options", newOptions);
+      newElement = {
+        ...item,
+        id: ID.uuid(),
+        // childItems: [],
+        options: newOptions,
+        field_name: `${
+          item.initialFieldName || item.field_name || "field"
+        }_${ID.uuid()}`,
+      };
+    }
+
+    const generateNewElement = (element) => {
+      if (element) {
+        newElement.childItems = element.childItems.map((childId) => {
+          if (childId) {
+            const child = this.getDataById(childId);
+            console.log("element", element, "child", child);
+            const newSubComp = {
+              ...child,
+              id: ID.uuid(),
+              parentId: newElement.id,
+              parentIndex: child.parentIndex + 1,
+            };
+            if (child.options) {
+              newSubComp.options = child.options.map((ele) => {
+                return {
+                  ...ele,
+                  key: `${child.initialFieldName}option_${ID.uuid()}`,
+                };
+              });
+            }
+            newData = update(newData, {
+              data: { $push: [newSubComp] },
+            });
+
+            this.setAsChild(
+              newElement,
+              newSubComp,
+              newElement.childItems.length,
+              false
+            );
+
+            return newSubComp.id;
+          }
+        });
+      }
+
+      return newElement;
+    };
+
+    let newData = { ...this.state };
+    const newItem = item.childItems ? generateNewElement(item) : newElement;
+    const index = data.indexOf(item);
+    newData = update(this.state, {
+      data: {
+        $splice: [[index + 1, 0, newItem]],
+      },
+    });
+
+    this.setState(newData);
+    store.dispatch("updateOrder", newData.data);
+  }
   getDataById(id) {
     const { data } = this.state;
-    return data.find(x => x && x.id === id);
+    return data.find((x) => x && x.id === id);
   }
 
   swapChildren(data, item, child, col) {
     if (child.col !== undefined && item.id !== child.parentId) {
       return false;
     }
-    if (!(child.col !== undefined && child.col !== col && item.childItems[col])) {
+    if (
+      !(child.col !== undefined && child.col !== col && item.childItems[col])
+    ) {
       // No child was assigned yet in both source and target.
       return false;
     }
@@ -131,10 +299,12 @@ export default class Preview extends React.Component {
     const oldItem = this.getDataById(oldId);
     const oldCol = child.col;
     // eslint-disable-next-line no-param-reassign
-    item.childItems[oldCol] = oldId; oldItem.col = oldCol;
+    item.childItems[oldCol] = oldId;
+    oldItem.col = oldCol;
     // eslint-disable-next-line no-param-reassign
-    item.childItems[col] = child.id; child.col = col;
-    store.dispatch('updateOrder', data);
+    item.childItems[col] = child.id;
+    child.col = col;
+    store.dispatch("updateOrder", data);
     return true;
   }
 
@@ -142,13 +312,15 @@ export default class Preview extends React.Component {
     const { data } = this.state;
     if (this.swapChildren(data, item, child, col)) {
       return;
-    } if (isBusy) {
+    }
+    if (isBusy) {
       return;
     }
     const oldParent = this.getDataById(child.parentId);
     const oldCol = child.col;
     // eslint-disable-next-line no-param-reassign
-    item.childItems[col] = child.id; child.col = col;
+    item.childItems[col] = child.id;
+    child.col = col;
     // eslint-disable-next-line no-param-reassign
     child.parentId = item.id;
     // eslint-disable-next-line no-param-reassign
@@ -156,17 +328,17 @@ export default class Preview extends React.Component {
     if (oldParent) {
       oldParent.childItems[oldCol] = null;
     }
-    const list = data.filter(x => x && x.parentId === item.id);
-    const toRemove = list.filter(x => item.childItems.indexOf(x.id) === -1);
+    const list = data.filter((x) => x && x.parentId === item.id);
+    const toRemove = list.filter((x) => item.childItems.indexOf(x.id) === -1);
     let newData = data;
     if (toRemove.length) {
       // console.log('toRemove', toRemove);
-      newData = data.filter(x => toRemove.indexOf(x) === -1);
+      newData = data.filter((x) => toRemove.indexOf(x) === -1);
     }
     if (!this.getDataById(child.id)) {
       newData.push(child);
     }
-    store.dispatch('updateOrder', newData);
+    store.dispatch("updateOrder", newData);
   }
 
   removeChild(item, col) {
@@ -174,12 +346,12 @@ export default class Preview extends React.Component {
     const oldId = item.childItems[col];
     const oldItem = this.getDataById(oldId);
     if (oldItem) {
-      const newData = data.filter(x => x !== oldItem);
+      const newData = data.filter((x) => x !== oldItem);
       // eslint-disable-next-line no-param-reassign
       item.childItems[col] = null;
       // delete oldItem.parentId;
       this.seq = this.seq > 100000 ? 0 : this.seq + 1;
-      store.dispatch('updateOrder', newData);
+      store.dispatch("updateOrder", newData);
       this.setState({ data: newData });
     }
   }
@@ -201,7 +373,7 @@ export default class Preview extends React.Component {
       // eslint-disable-next-line no-param-reassign
       item.index = newIndex;
       this.seq = this.seq > 100000 ? 0 : this.seq + 1;
-      store.dispatch('updateOrder', newData);
+      store.dispatch("updateOrder", newData);
       this.setState({ data: newData });
     }
   }
@@ -213,7 +385,7 @@ export default class Preview extends React.Component {
     } else {
       data.splice(hoverIndex, 0, item);
       this.saveData(item, hoverIndex, hoverIndex);
-      store.dispatch('insertItem', item);
+      store.dispatch("insertItem", item);
     }
   }
 
@@ -231,16 +403,19 @@ export default class Preview extends React.Component {
   saveData(dragCard, dragIndex, hoverIndex) {
     const newData = update(this.state, {
       data: {
-        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]],
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard],
+        ],
       },
     });
     this.setState(newData);
-    store.dispatch('updateOrder', newData.data);
+    store.dispatch("updateOrder", newData.data);
   }
 
   getElement(item, index) {
     if (item.custom) {
-      if (!item.component || typeof item.component !== 'function') {
+      if (!item.component || typeof item.component !== "function") {
         // eslint-disable-next-line no-param-reassign
         item.component = this.props.registry.get(item.key);
       }
@@ -250,7 +425,30 @@ export default class Preview extends React.Component {
     if (SortableFormElement === null) {
       return null;
     }
-    return <SortableFormElement id={item.id} seq={this.seq} index={index} moveCard={this.moveCard} insertCard={this.insertCard} mutable={false} parent={this.props.parent} editModeOn={this.props.editModeOn} isDraggable={true} key={item.id} sortData={item.id} data={item} getDataById={this.getDataById} setAsChild={this.setAsChild} removeChild={this.removeChild} _onDestroy={this._onDestroy} />;
+    return (
+      <div onClick={this.props.editModeOn.bind(this.props.parent, item)}>
+        <SortableFormElement
+          id={item.id}
+          seq={this.seq}
+          index={index}
+          moveCard={this.moveCard}
+          insertCard={this.insertCard}
+          mutable={false}
+          parent={this.props.parent}
+          editModeOn={this.props.editModeOn}
+          isDraggable={true}
+          key={item.id}
+          sortData={item.id}
+          data={item}
+          getDataById={this.getDataById}
+          setAsChild={this.setAsChild}
+          removeChild={this.removeChild}
+          _onDestroy={this._onDestroy}
+          _onCopy={this._onCopy}
+          // _onClear={this._onClear}
+        />
+      </div>
+    );
   }
 
   showEditForm() {
@@ -271,8 +469,10 @@ export default class Preview extends React.Component {
 
   render() {
     let classes = this.props.className;
-    if (this.props.editMode) { classes += ' is-editing'; }
-    const data = this.state.data.filter(x => !!x && !x.parentId);
+    if (this.props.editMode) {
+      classes += " is-editing";
+    }
+    const data = this.state.data.filter((x) => !!x && !x.parentId);
     const items = data.map((item, index) => this.getElement(item, index));
     return (
       <div className={classes}>
@@ -280,8 +480,14 @@ export default class Preview extends React.Component {
           {this.props.editElement !== null && this.showEditForm()}
         </div>
         <div className="Sortable">{items}</div>
-        <PlaceHolder id="form-place-holder" show={items.length === 0} index={items.length} moveCard={this.cardPlaceHolder} insertCard={this.insertCard} />
-        <CustomDragLayer/>
+        <PlaceHolder
+          id="form-place-holder"
+          show={items.length === 0}
+          index={items.length}
+          moveCard={this.cardPlaceHolder}
+          insertCard={this.insertCard}
+        />
+        <CustomDragLayer />
       </div>
     );
   }
@@ -291,6 +497,6 @@ Preview.defaultProps = {
   files: [],
   editMode: false,
   editElement: null,
-  className: 'col-md-9 react-form-builder-preview float-left',
-  renderEditForm: props => <FormElementsEdit {...props} />,
+  className: "col-md-9 react-form-builder-preview float-left",
+  renderEditForm: (props) => <FormElementsEdit {...props} />,
 };

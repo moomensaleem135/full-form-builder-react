@@ -31,7 +31,13 @@ class Header extends React.Component {
     }
 
     return (
-      <div style={{ ...this.props.style,  marginTop: `${this.props.data.marginTop}px`, }} className={baseClasses}>
+      <div
+        style={{
+          ...this.props.style,
+          marginTop: `${this.props.data.marginTop}px`,
+        }}
+        className={baseClasses}
+      >
         <ComponentHeader {...this.props} />
         <h3
           className={classNames}
@@ -389,7 +395,7 @@ class Dropdown extends React.Component {
         <ComponentHeader {...this.props} />
         <div className="form-group">
           <ComponentLabel {...this.props} />
-          <select {...props}>
+          <select {...props} style={{ maxWidth: "fit-content" }}>
             {this.props.data.options.map((option) => {
               const this_key = `preview_${option.key}`;
               return (
@@ -718,6 +724,7 @@ class Image extends React.Component {
             src={this.props.data.src}
             width={this.props.data.width}
             height={this.props.data.height}
+            style={{ maxHeight: "800px", maxWidth: "800px" }}
           />
         )}
         {!this.props.data.src && <div className="no-image">No Image</div>}
@@ -803,12 +810,23 @@ class HyperLink extends React.Component {
 }
 
 class Download extends React.Component {
+  // getFileName(filePath) {
+  //   if (!filePath || !filePath.name) {
+  //     return "";
+  //   }
+  //   // Assuming filePath is a URL or a path string, extract the file name
+  //   const parts = filePath.name.split("/");
+  //   return parts[parts.length - 1];
+  // }
+
   render() {
+    console.log(this);
     let baseClasses = "SortableItem rfb-item";
     if (this.props.data.pageBreakBefore) {
       baseClasses += " alwaysbreak";
     }
 
+    // const fileName = this.getFileName(this.props.data.downloadFile.name);
     return (
       <div
         style={{
@@ -820,10 +838,46 @@ class Download extends React.Component {
         <ComponentHeader {...this.props} />
         <div className="form-group">
           <a
-            href={`${this.props.download_path}?id=${this.props.data.file_path}`}
+            href={this.props.data._href}
+            download={
+              // this.props.data.downloadLink
+              //   ? this.props.data.downloadLink.fileName
+              //   : ""
+              this.props.data._href
+            } // Adds the filename to the download attribute
+            target="blank"
           >
-            {this.props.data.content}
+            {this.props.data.downloadFile
+              ? this.props.data.downloadLink.fileName
+              : this.props.data.content}
+            &nbsp;
+            {this.props.data.downloadFile &&
+              this.props.data.downloadLink.type === "application/pdf" && (
+                <i className="fa fa-file-pdf" />
+              )}
           </a>
+          {this.props.data.download && (
+            <div className="file-preview">
+              {/* <IntlMessages id="selected-file" />: {this.props.data.downloadFile.name} */}
+              {this.props.data.downloadFile.videoPreviewUrl && (
+                <div className="video-preview">
+                  <video
+                    width={`${this.props.data.width}px`}
+                    height={`${this.props.data.height}px`}
+                    // width="1000px"
+                    // height="1000px"
+                    controls
+                  >
+                    <source
+                      src={this.props.data.downloadFile.videoPreviewUrl}
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -968,10 +1022,11 @@ class FileUpload extends React.Component {
 
     if (target.files && target.files.length > 0) {
       file = target.files[0];
-
-      self.setState({
+      console.log("file", file);
+      this.setState({
         fileUpload: file,
       });
+      this.state.fileUpload=file
     }
   };
 
@@ -984,17 +1039,17 @@ class FileUpload extends React.Component {
   saveFile = async (e) => {
     e.preventDefault();
     const sourceUrl = this.props.defaultValue;
-    const response = await fetch(sourceUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      responseType: "blob",
-    });
-    const dispositionHeader = response.headers.get("Content-Disposition");
-    const resBlob = await response.blob();
-    // eslint-disable-next-line no-undef
+    // const response = await fetch(sourceUrl, {
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json; charset=utf-8",
+    //   },
+    //   responseType: "blob",
+    // });
+    // const dispositionHeader = response.headers.get("Content-Disposition");
+    // const resBlob = await response.blob();
+    // // eslint-disable-next-line no-undef
     const blob = new Blob([resBlob], {
       type: this.props.data.fileType || response.headers.get("Content-Type"),
     });
@@ -1034,50 +1089,56 @@ class FileUpload extends React.Component {
               </button>
             </div>
           ) : (
-            <div className="image-upload-container">
-              <div style={fileInputStyle}>
-                <input
-                  name={name}
-                  type="file"
-                  accept={this.props.data.fileType || "*"}
-                  className="image-upload"
-                  onChange={this.displayFileUpload}
-                />
-                <div className="image-upload-control">
-                  <div className="btn btn-default">
-                    <i className="fas fa-file"></i> Upload File
+            <div>
+              <div>
+                <div style={fileInputStyle}>
+                  <input
+                    name={name}
+                    type="file"
+                    accept={this.props.data.fileType || "*"}
+                    className="image-upload"
+                    onChange={this.displayFileUpload}
+                    id="upload"
+                    hidden
+                  />
+                  <label className="file-upload-button" for="upload">
+                    <i className="fas fa-upload"></i> Upload File
+                  </label>
+                  <div className="image-upload-control">
+                    <p>Select a file from your computer or device.</p>
                   </div>
-                  <p>Select a file from your computer or device.</p>
                 </div>
-              </div>
 
-              {this.state.fileUpload && (
-                <div>
-                  <div className="file-upload-preview">
+                {this.state.fileUpload && (
+                  <div>
+                    <div className="file-upload-preview">
+                      <div
+                        style={{ display: "inline-block", marginRight: "5px" }}
+                      >
+                        {`Name: ${this.state.fileUpload.name}`}
+                      </div>
+                      <div
+                        style={{ display: "inline-block", marginLeft: "5px" }}
+                      >
+                        {this.state.fileUpload.size.length > 6
+                          ? `Size:  ${Math.ceil(
+                              this.state.fileUpload.size / (1024 * 1024)
+                            )} mb`
+                          : `Size:  ${Math.ceil(
+                              this.state.fileUpload.size / 1024
+                            )} kb`}
+                      </div>
+                    </div>
+                    <br />
                     <div
-                      style={{ display: "inline-block", marginRight: "5px" }}
+                      className="btn btn-file-upload-clear"
+                      onClick={this.clearFileUpload}
                     >
-                      {`Name: ${this.state.fileUpload.name}`}
-                    </div>
-                    <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                      {this.state.fileUpload.size.length > 6
-                        ? `Size:  ${Math.ceil(
-                            this.state.fileUpload.size / (1024 * 1024)
-                          )} mb`
-                        : `Size:  ${Math.ceil(
-                            this.state.fileUpload.size / 1024
-                          )} kb`}
+                      <i className="fas fa-times"></i> Clear File
                     </div>
                   </div>
-                  <br />
-                  <div
-                    className="btn btn-file-upload-clear"
-                    onClick={this.clearFileUpload}
-                  >
-                    <i className="fas fa-times"></i> Clear File
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -1248,7 +1309,10 @@ class Button extends React.Component {
       >
         <ComponentHeader {...this.props} />
         <div className="form-group">
-          <button className={`btn btn-${this.props.data.color}`}>
+          <button
+            className={`btn btn-${this.props.data.color}`}
+            onClick={(e) => e.preventDefault()}
+          >
             {/* <ComponentLabel {...this.props} /> */}
             {this.props.data.label}
           </button>
@@ -1262,14 +1326,13 @@ class Collapse extends React.Component {
     super(props);
     this.inputField = React.createRef();
     this.state = {
-      value:
-        props.defaultValue !== undefined
-          ? parseInt(props.defaultValue, 10)
-          : parseInt(props.data.default_value, 10),
-      isHidden: true, // Initialize isHidden to true
+      // value:
+      //   props.defaultValue !== undefined
+      //     ? parseInt(props.defaultValue, 10)
+      //     : parseInt(props.data.default_value, 10),
+      isHidden: true,
     };
   }
-
   handleCollapse = () => {
     console.log("hello", this);
     this.setState({
@@ -1318,22 +1381,25 @@ class Collapse extends React.Component {
         <div className="form-group">
           <div onClick={this.handleCollapse} className="collapse-main">
             {this.state.isHidden === true ? (
-              <i className="fa fa-minus-square" />
-            ) : (
               <i className="fa fa-plus-circle" />
+            ) : (
+              <i className="fa fa-minus-square" />
             )}
-
-            <p className="collapse-text"> {this.props.data.label}</p>
+            <div className="collapse-text">
+              <ComponentLabel {...this.props} />
+            </div>
           </div>
-          {this.state.isHidden && (
-            <p className="collapse-children-text">{this.props.data.children}</p>
+
+          {!this.state.isHidden && (
+            <p style={{ width: "100%" }}>
+              <ComponentLabel {...this.props} newText="next" />
+            </p>
           )}
         </div>
       </div>
     );
   }
 }
-
 
 FormElements.Header = Header;
 FormElements.Paragraph = Paragraph;

@@ -42,6 +42,7 @@ function getStyle(backgroundColor) {
     backgroundColor,
     padding: 0,
     float: 'left',
+
   };
 }
 
@@ -68,8 +69,9 @@ const Dustbin = React.forwardRef(
     useImperativeHandle(
       ref,
       () => ({
+        
         onDrop: (dropped) => {
-          console.log("dropped ites")
+          
           const { data } = dropped;
           if (data) {
             onDropSuccess && onDropSuccess();
@@ -94,7 +96,9 @@ const Dustbin = React.forwardRef(
     }
 
     // console.log('sameCard, canDrop', sameCard, canDrop);
+    console.log("hello drag",item)
     return connectDropTarget(
+      
       <div style={!sameCard ? getStyle(backgroundColor) : getStyle('rgba(0, 0, 0, .03') }>
       {!element && <span>Drop your element here </span>}
         {element}

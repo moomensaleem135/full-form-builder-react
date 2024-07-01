@@ -88,7 +88,7 @@ class ReactForm extends React.Component {
     } else if (ref && ref.inputField && ref.inputField.current) {
       $item = ReactDOM.findDOMNode(ref.inputField.current);
       if ($item && typeof $item.value === 'string') {
-        $item.value = $item.value.trim();
+        $item.value = $item.value
       }
     }
     return $item;
@@ -237,6 +237,7 @@ class ReactForm extends React.Component {
       const {onChange} = this.props;
       const data = this._collectFormData(this.props.data);
       onChange(data);
+  
     }
   }
 
@@ -305,6 +306,7 @@ class ReactForm extends React.Component {
     if (item.custom) {
       return this.getCustomElement(item);
     }
+    console.log("getinput",item,"dd",this.inputs[item.field_name])
     const Input = FormElements[item.element];
     return (<Input
       handleChange={this.handleChange}
@@ -314,6 +316,7 @@ class ReactForm extends React.Component {
       data={item}
       read_only={this.props.read_only}
       defaultValue={this._getDefaultValue(item)} />);
+      
   }
 
   getContainerElement(item, Element) {
@@ -445,7 +448,7 @@ class ReactForm extends React.Component {
       display: 'none',
     };
     return (
-      <div>
+      <div >
           <FormValidator emitter={this.emitter} />
           <div className='react-form-builder-form' >
             <form encType='multipart/form-data' ref={c => this.form = c} action={this.props.form_action} onBlur={this.handleBlur} onChange={this.handleChange} onSubmit={this.handleSubmit} method={this.props.form_method}>
