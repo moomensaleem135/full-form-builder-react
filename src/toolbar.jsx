@@ -494,7 +494,8 @@ class Toolbar extends React.Component {
       elementOptions.timeFormat = item.timeFormat;
       elementOptions.showTimeSelect = item.showTimeSelect;
       elementOptions.showTimeSelectOnly = item.showTimeSelectOnly;
-      elementOptions.showTimeInput = item.showTimeInput;
+      // elementOptions.showTimeInput = item.showTimeInput;
+      elementOptions.canHaveAnswer=true
     }
 
     if (elementKey === "Download") {

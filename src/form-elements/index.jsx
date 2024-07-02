@@ -1161,9 +1161,11 @@ class Range extends React.Component {
 
   changeValue = (e) => {
     const { target } = e;
-    this.setState({
-      value: target.value,
-    });
+    // this.setState({
+    //   value: target.value,
+    // });
+    console.log("range value",target.value)
+    this.state.value=target.value
   };
 
   render() {
