@@ -102,7 +102,7 @@ export default class Preview extends React.Component {
         answer_data[item.field_name] = this.props.variables[item.variableKey];
       }
     });
-    console.log("hello", "answer_data", answer_data);
+    console.log("hello", "answer_data", this.state.answer_data);
 
     this.setState({
       data,

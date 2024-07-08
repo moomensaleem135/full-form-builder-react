@@ -504,6 +504,9 @@ class Toolbar extends React.Component {
       elementOptions.height=240;
       elementOptions.width=320
     }
+    if (elementKey === "FileUpload") {
+      elementOptions.file={}
+    }
 
     if (elementKey === "Range") {
       elementOptions.step = item.step;

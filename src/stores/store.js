@@ -63,7 +63,10 @@ const store = new Store({
         // console.log('resetLastItem');
       }
     },
-
+    getDataById(context,id) {
+      const data  = context.state.data;
+      return data.find((x) => x && x.id === id);
+    },
     post(context) {
       const { data } = context.state;
       this.setData(context, data, true);

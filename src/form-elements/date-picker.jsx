@@ -18,40 +18,36 @@ class DatePicker extends React.Component {
   handleChange = (dt) => {
     let placeholder;
     const { formatMask } = this.state;
-    // this.state.value = dt ? format(dt, formatMask) : ""
-    // this.state.internalValue = dt,
-    // this.state.placeholder =  dt=== ""
-    // ? formatMask.toLowerCase()
-    // : ""
-    if (dt.target) {
-      placeholder =
-        dt && dt.target && dt.target.value === ""
-          ? formatMask.toLowerCase()
-          : "";
-      const formattedDate = dt.target.value
-        ? format(parseISO(dt.target.value), formatMask)
-        : format(parseISO(dt.target.value), formatMask);
-      // this.setState({
-      //   value: formattedDate,
-      //   internalValue: formattedDate,
-      //   placeholder,
-      // });
-      console.log("formated date", formattedDate);
-      (this.state.value = formattedDate),
-        (this.state.internalValue = formattedDate),
-        (this.state.placeholder = placeholder);
-    } else {
-      this.setState({
-        value: dt ? format(dt, formatMask) : "",
-        internalValue: dt,
-        placeholder,
-      });
-      console.log("formated date", format(dt, formatMask));
-      this.state.value = dt ? format(dt, formatMask) : "";
-      (this.state.internalValue = dt),
-        (this.state.placeholder = dt === "" ? formatMask.toLowerCase() : "");
-    }
-    console.log(this.state);
+   this.state.value=dt.target.value
+    // if (dt.target) {
+    //   placeholder =
+    //     dt && dt.target && dt.target.value === ""
+    //       ? formatMask.toLowerCase()
+    //       : "";
+    //   const formattedDate = dt.target.value
+    //     ? format(parseISO(dt.target.value), formatMask)
+    //     : format(parseISO(dt.target.value), formatMask);
+    //   this.setState({
+    //     value: formattedDate,
+    //     internalValue: formattedDate,
+    //     placeholder,
+    //   });
+    //   console.log("formated date", formattedDate);
+    //   (this.state.value = formattedDate),
+    //     (this.state.internalValue = formattedDate),
+    //     (this.state.placeholder = placeholder);
+    // } else {
+    //   this.setState({
+    //     value: dt ? format(dt, formatMask) : "",
+    //     internalValue: dt,
+    //     placeholder,
+    //   });
+    //   console.log("formated date", format(dt, formatMask));
+    //   this.state.value = dt ? format(dt, formatMask) : "";
+    //   (this.state.internalValue = dt),
+    //     (this.state.placeholder = dt === "" ? formatMask.toLowerCase() : "");
+    // }
+    // console.log(this.state);
   };
 
   static updateFormat(props, oldFormatMask) {
@@ -135,15 +131,14 @@ class DatePicker extends React.Component {
     if (this.props.data.pageBreakBefore) {
       baseClasses += " alwaysbreak";
     }
-     let inputType='date'
-     if(showTimeSelect && !showTimeSelectOnly ){
-      inputType='datetime-local'
-     }else if(showTimeSelect && showTimeSelectOnly){
-      inputType='time'
-
-     }else{
-      inputType='date'
-     }
+    let inputType = "date";
+    if (showTimeSelect && !showTimeSelectOnly) {
+      inputType = "datetime-local";
+    } else if (showTimeSelect && showTimeSelectOnly) {
+      inputType = "time";
+    } else {
+      inputType = "date";
+    }
     return (
       <div
         className={baseClasses}
@@ -155,7 +150,7 @@ class DatePicker extends React.Component {
         <ComponentHeader {...this.props} />
         <div className="form-group">
           <ComponentLabel {...this.props} />
-          <div>
+          <div  style={{maxWidth:'13rem !important'}}>
             {/* {readOnly && (
               <input
                 type="text"
@@ -197,32 +192,18 @@ class DatePicker extends React.Component {
                 placeholderText={placeholderText}
               />
             )} */}
-            {/* <ReactDatePicker
-                name={props.name}
-                ref={props.ref}
-                onChange={this.handleChange }
-                selected={this.state.internalValue}
-                todayButton={"Today"}
-                className="form-control"
-                isClearable={true}
-                showTimeSelect={showTimeSelect}
-                showTimeSelectOnly={showTimeSelectOnly}
-                showTimeInput={showTimeInput}
-                dateFormat={this.state.formatMask}
-                portalId="root-portal"
-                autoComplete="off"
-                placeholderText={placeholderText}
-              /> */}
+          
             <input
+              name={props.name}
+              // ref={props.ref}
               type={inputType}
               onChange={this.handleChange}
-              value={this.state.internalValue}
+              value={this.state.value}
               className="form-control"
-              portalId="root-portal"
-              placeholderText={placeholderText}
-
+             
+              // portalId="root-portal"
+              // placeholderText={placeholderText}
             />
-          
           </div>
         </div>
       </div>

@@ -127,9 +127,9 @@ class ReactForm extends React.Component {
         let checked_options = 0;
         item.options.forEach(option => {
           const $option = ReactDOM.findDOMNode(ref.options[`child_ref_${option.key}`]);
-          if ($option.checked) {
-            checked_options += 1;
-          }
+          // if ($option.checked) {
+          //   checked_options += 1;
+          // }
         });
         if (checked_options < 1) {
           // errors.push(item.label + ' is required!');

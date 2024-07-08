@@ -8,7 +8,6 @@ export default class HeaderBar extends React.Component {
     this.state = {
       roPreviewVisible: false,
     };
-    console.log("oncopy",this)
   }
   handleDelete = () => {
     // This function will be called when the user confirms the deletion
@@ -21,7 +20,6 @@ handleCopy=()=>{
 }
  
   showRoPreview() {
-    console.log("yahho");
     this.setState({
       roPreviewVisible: true,
     });
