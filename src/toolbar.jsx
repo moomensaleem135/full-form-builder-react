@@ -10,7 +10,12 @@ import ToolbarGroupItem from "./toolbar-group-item";
 import ID from "./UUID";
 import store from "./stores/store";
 import { groupBy } from "./functions";
-
+import { FaParagraph,FaArrowsAltH,FaCaretDown,FaRegCheckSquare,FaRegDotCircle ,FaEnvelope,FaImage, FaRegCalendarAlt, FaSlidersH, FaBold, FaChevronCircleDown, FaTextHeight, FaUpload, FaFont, FaTags, FaPlus, FaPhoneAlt, FaBars, FaStar, FaPenSquare, FaLink, FaCamera      } from "react-icons/fa";
+import { TbCircleLetterN } from "react-icons/tb";
+import { TfiLayoutColumn2,TfiLayoutColumn3  } from "react-icons/tfi";
+import { GrColumns } from "react-icons/gr";
+import { FaFileCirclePlus } from "react-icons/fa6";
+import { MdOutlineFileUpload,MdOutlineTitle, MdTitle } from "react-icons/md";
 // function isDefaultItem(item) {
 //   const keys = Object.keys(item);
 //   return keys.filter(x => x !== 'element' && x !== 'key' && x !== 'group_name').length === 0;
@@ -49,7 +54,7 @@ function buildGroupItems(allItems) {
     .filter((v, i, self) => self.indexOf(v) === i);
   return { items, grouped, groupKeys };
 }
-
+const size="1rem"
 class Toolbar extends React.Component {
   constructor(props) {
     super(props);
@@ -149,7 +154,7 @@ class Toolbar extends React.Component {
       {
         key: "Header",
         name: intl.formatMessage({ id: "header-text" }),
-        icon: "fas fa-heading",
+        icon: <FaTextHeight size={size} /> ,
         static: true,
         content: intl.formatMessage({ id: "place-holder-text" }),
       },
@@ -157,27 +162,27 @@ class Toolbar extends React.Component {
         key: "Label",
         name: intl.formatMessage({ id: "label" }),
         static: true,
-        icon: "fas fa-font",
+        icon: <FaFont size={size} />,
         content: intl.formatMessage({ id: "place-holder-text" }),
       },
       {
         key: "Paragraph",
         name: intl.formatMessage({ id: "paragraph" }),
         static: true,
-        icon: "fas fa-paragraph",
+        icon: <FaParagraph size={size} />,
         content: intl.formatMessage({ id: "place-holder-text" }),
       },
       {
         key: "LineBreak",
         name: intl.formatMessage({ id: "line-break" }),
         static: true,
-        icon: "fas fa-arrows-alt-h",
+        icon: <FaArrowsAltH size={size}/>,
       },
       {
         key: "Dropdown",
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "dropdown" }),
-        icon: "far fa-caret-square-down",
+        icon: <FaCaretDown size={size}/> ,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "dropdown_",
         options: [],
@@ -186,7 +191,7 @@ class Toolbar extends React.Component {
         key: "Tags",
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "tags" }),
-        icon: "fas fa-tags",
+        icon: <FaTags size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "tags_",
         options: [],
@@ -195,7 +200,7 @@ class Toolbar extends React.Component {
         key: "Checkboxes",
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "checkboxes" }),
-        icon: "far fa-check-square",
+        icon: <FaRegCheckSquare size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "checkboxes_",
         options: [],
@@ -204,7 +209,7 @@ class Toolbar extends React.Component {
         key: "RadioButtons",
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "multiple-choice" }),
-        icon: "far fa-dot-circle",
+        icon: <FaRegDotCircle size={size}/> ,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "radiobuttons_",
         options: [],
@@ -214,7 +219,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "text-input" }),
         label: intl.formatMessage({ id: "place-holder-label" }),
-        icon: "fas fa-font",
+        icon:<FaFont size={size} />,
         field_name: "text_input_",
       },
       {
@@ -222,7 +227,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "email-input" }),
         label: intl.formatMessage({ id: "place-holder-email" }),
-        icon: "fas fa-envelope",
+        icon: <FaEnvelope size={size}/> ,
         field_name: "email_input_",
       },
       {
@@ -230,7 +235,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "number-input" }),
         label: intl.formatMessage({ id: "place-holder-label" }),
-        icon: "fas fa-plus",
+        icon: <FaPlus size={size} />,
         field_name: "number_input_",
       },
       {
@@ -238,7 +243,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "phone-input" }),
         label: intl.formatMessage({ id: "place-holder-phone-number" }),
-        icon: "fas fa-phone",
+        icon: <FaPhoneAlt />,
         field_name: "phone_input_",
       },
       {
@@ -246,7 +251,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "multi-line-input" }),
         label: intl.formatMessage({ id: "place-holder-label" }),
-        icon: "fas fa-text-height",
+        icon: <TbCircleLetterN size={size} />,
         field_name: "text_area_",
       },
       {
@@ -254,7 +259,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "fieldset" }),
         label: intl.formatMessage({ id: "fieldset" }),
-        icon: "fas fa-bars",
+        icon: <FaBars size={size} />,
         field_name: "fieldset-element",
       },
       {
@@ -262,7 +267,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "two-columns-row" }),
         label: "",
-        icon: "fas fa-columns",
+        icon: <TfiLayoutColumn2 size={size}/>,
         field_name: "two_col_row_",
       },
       {
@@ -270,7 +275,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "three-columns-row" }),
         label: "",
-        icon: "fas fa-columns",
+        icon: <TfiLayoutColumn3 size={size}/> ,
         field_name: "three_col_row_",
       },
       {
@@ -279,7 +284,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "four-columns-row" }),
         label: "",
-        icon: "fas fa-columns",
+        icon: <GrColumns size={size} />,
         field_name: "four_col_row_",
         col_count: 4,
         class_name: "col-md-3",
@@ -290,7 +295,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "five-columns-row" }),
         label: "",
-        icon: "fas fa-columns",
+        icon: <GrColumns size={size} />,
         field_name: "five_col_row_",
         col_count: 5,
         class_name: "col",
@@ -301,7 +306,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: false,
         name: intl.formatMessage({ id: "six-columns-row" }),
         label: "",
-        icon: "fas fa-columns",
+        icon: <GrColumns size={size} />,
         field_name: "six_col_row_",
         col_count: 6,
         class_name: "col-md-2",
@@ -310,7 +315,7 @@ class Toolbar extends React.Component {
         key: "Image",
         name: intl.formatMessage({ id: "image" }),
         label: "",
-        icon: "far fa-image",
+        icon: <FaImage size={size} />,
         field_name: "image_",
         src: "",
       },
@@ -319,7 +324,7 @@ class Toolbar extends React.Component {
         canHaveAnswer: true,
         name: intl.formatMessage({ id: "rating" }),
         label: intl.formatMessage({ id: "place-holder-label" }),
-        icon: "fas fa-star",
+        icon: <FaStar size={size} />,
         field_name: "rating_",
       },
       {
@@ -332,7 +337,7 @@ class Toolbar extends React.Component {
         showTimeSelectOnly: false,
         showTimeInput: false,
         name: intl.formatMessage({ id: "date" }),
-        icon: "far fa-calendar-alt",
+        icon: <FaRegCalendarAlt size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "date_picker_",
       },
@@ -340,14 +345,14 @@ class Toolbar extends React.Component {
         key: "Signature",
         canReadOnly: true,
         name: intl.formatMessage({ id: "signature" }),
-        icon: "fas fa-pen-square",
+        icon: <FaPenSquare size={size} />,
         label: intl.formatMessage({ id: "signature" }),
         field_name: "signature_",
       },
       {
         key: "HyperLink",
         name: intl.formatMessage({ id: "website" }),
-        icon: "fas fa-link",
+        icon: <FaLink size={size} />,
         static: true,
         content: intl.formatMessage({ id: "place-holder-website-link" }),
         href: "http://www.example.com",
@@ -355,7 +360,7 @@ class Toolbar extends React.Component {
       {
         key: "Download",
         name: intl.formatMessage({ id: "file-attachment" }),
-        icon: "fas fa-file",
+        icon: <FaFileCirclePlus size={size} />,
         static: true,
         content: intl.formatMessage({ id: "place-holder-file-name" }),
         field_name: "download_",
@@ -365,7 +370,7 @@ class Toolbar extends React.Component {
       {
         key: "Range",
         name: intl.formatMessage({ id: "range" }),
-        icon: "fas fa-sliders-h",
+        icon: <FaSlidersH size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "range_",
         step: 1,
@@ -378,7 +383,7 @@ class Toolbar extends React.Component {
       {
         key: "Button",
         name: intl.formatMessage({ id: "Button" }),
-        icon: "fas fa-bold",
+        icon: <FaBold size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "button",
         marginTop: "0",
@@ -386,23 +391,23 @@ class Toolbar extends React.Component {
       {
         key: "Camera",
         name: intl.formatMessage({ id: "camera" }),
-        icon: "fas fa-camera",
+        icon: <FaCamera size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "camera_",
       },
       {
         key: "FileUpload",
         name: intl.formatMessage({ id: "file-upload" }),
-        icon: "fas fa-file",
+        icon: <FaUpload size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
         field_name: "file_upload_",
       },
       {
         key: "Collapse",
         name: intl.formatMessage({ id: "Collapse" }),
-        icon: "fas fa-chevron-circle-down",
+        icon: <FaChevronCircleDown size={size} />,
         label: intl.formatMessage({ id: "place-holder-label" }),
-        field_name: "file_upload_",
+        field_name: "collapse_",
       },
     ];
   }

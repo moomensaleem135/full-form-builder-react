@@ -1,5 +1,6 @@
 import React from "react";
 import DragHandle from "./component-drag-handle";
+import { FaEdit, FaExclamationTriangle, FaRegCopy, FaRegTrashAlt, FaTimes } from "react-icons/fa";
 // import 'bootstrap/dist/css/bootstrap.min.css';  // Make sure Bootstrap CSS is imported
 
 export default class HeaderBar extends React.Component {
@@ -48,7 +49,7 @@ handleCopy=()=>{
                   this.props.data
                 )}
               >
-                <i className="is-isolated fas fa-edit"></i>
+                <FaEdit />
               </div>
             )}
             
@@ -58,7 +59,7 @@ handleCopy=()=>{
               // data-bs-target="#deleteModal"
               onClick={(e)=>{e.stopPropagation();this.handleCopy()}}
             >
-              <i className="is-isolated fas fa-copy"></i>
+              <FaRegCopy />
             </div>
             <DragHandle
               data={this.props.data}
@@ -72,7 +73,7 @@ handleCopy=()=>{
               data-bs-target="#deleteModal"
               onClick={(e) => {e.stopPropagation();this.showRoPreview()}}
             >
-              <i className="is-isolated fas fa-trash"></i>
+             <FaRegTrashAlt  />
             </div>
           </div>
         </div>
@@ -85,13 +86,10 @@ handleCopy=()=>{
                       e.stopPropagation();
                       this.closePreview();
                     }}>
-                  <i className="fa fa-times fa-lg" />
+                  <FaTimes  />
                 </span>
                 <div className="Modal-custom-text-box">
-                  <i
-                    className="fa fa-exclamation-triangle fa-3x"
-                    style={{ color: "red" }}
-                  />
+                <FaExclamationTriangle color="red" size={"3rem"} />
                   <p className="delete-modal-heading">Are you sure you want to delete this item?</p>
                   <p className="delete-modal-heading">
                   It will be deleted permanently.
