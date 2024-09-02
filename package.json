@@ -1,6 +1,6 @@
 {
   "name": "full-form-builder-react",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "A complete form builder for react.",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
